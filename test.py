@@ -99,7 +99,6 @@ def time_stats(df,months,days): # changed this function to display the month and
     # TO DO: display the most common month
     common_month = df['month'].mode()[0]
     print('Most Common Month:', months[common_month-1].capitalize()) # display the actual name of the month
-
     # TO DO: display the most common day of week
     common_dow = df['day_of_week'].mode()[0]
     print('Most Common Day of Week:', days[common_dow-1].capitalize()) # display the actual name of the weekday
