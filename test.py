@@ -96,7 +96,7 @@ def time_stats(df,months): # changed this function to display the month name
 
     # TO DO: display the most common month
     common_month = df['month'].mode()[0]
-    print('Most Common Month:', months[common_month-1]) # display the actual name of the month
+    print('Most Common Month:', months[common_month-1].capitalize()) # display the actual name of the month
     # TO DO: display the most common day of week
     common_dow = df['day_of_week'].mode()[0]
     print('Most Common Day of Week:', common_dow) # display the actual name of the weekday
@@ -141,11 +141,11 @@ def trip_duration_stats(df):
 
     # TO DO: display total travel time
     total_travel = df['Trip Duration'].sum()
-    print('Total Travel Time: {} minutes'.format(total_travel/60)) # divide by 60 to get trip time in minutes
+    print('Total Travel Time: %.2f minutes' % (total_travel/60)) # divide by 60 to get trip time in minutes
 
     # TO DO: display mean travel time
     mean_travel = df['Trip Duration'].mean()
-    print('Mean Travel Time: {} minutes'.format(mean_travel/60)) # divide by 60 to get trip time in minutes
+    print('Mean Travel Time: %.2f minutes'% (mean_travel/60)) # divide by 60 to get trip time in minutes
 
     print("\nThis took %s seconds." % (time.time() - start_time))
     print('-'*40)
