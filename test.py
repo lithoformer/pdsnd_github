@@ -23,7 +23,7 @@ def get_filters():
 
 	    city = str(input('What city would you like to analyze (please enter Chicago, New York City, or Washington? '))
     
-    city = city.lower()
+    city = city.lower() # convert to lowercase for input as function args
     # TO DO: get user input for month (all, january, february, ... , june)
     month = 'temp'
 
@@ -31,7 +31,7 @@ def get_filters():
 
 	    month = str(input('What month would you like to analyze (please enter a month between January and June, or \'All\' if you do not wish to filter)? '))
     
-    month = month.lower()
+    month = month.lower() # convert to lowercase for input as function args
     # TO DO: get user input for day of week (all, monday, tuesday, ... sunday)
     day = 'temp'
 
@@ -39,8 +39,8 @@ def get_filters():
 
 	    day = str(input('What day of the week would you like to analyze (please enter a day between Monday and Sunday, or \'All\' if you do not wish to filter)? '))
     
-    day = day.lower()
-    print('-'*40)
+    day = day.lower() # convert to lowercase for input as function args
+    print('-'*40) # print a spacer of dashes
 
     return city, month, day
 
@@ -59,7 +59,7 @@ def load_data(city, month, day):
     
     df['Start Time'] = pd.to_datetime(df['Start Time'])
     df['month'] = df['Start Time'].dt.month
-    df['day_of_week'] = df['Start Time'].dt.day_name()
+    df['day_of_week'] = df['Start Time'].dt.day_name() # get the weekday names
     
     if month.lower() != 'all':
         # use the index of the months list to get the corresponding int
@@ -71,24 +71,24 @@ def load_data(city, month, day):
 
     if day.lower() != 'all':
         # filter by day of week to create the new dataframe
-        df = df[df['day_of_week'] == day.day_name()]
+        df = df[df['day_of_week'] == day.day_name()] # get the weekday names
     
     return df
 
 def raw_data(df):
     """Prints 5 rows of raw data at user's request."""
     
-    row_count = df.shape[0]
+    row_count = df.shape[0] # get the row count
     start_rows = 0
     end_rows = 5
     user_input = 'yes'
     while (user_input.lower() != 'no' and end_rows < row_count):
         user_input = str(input('Would you like to see 5 rows of raw data? Please enter yes or no:'))
-        print(df.iloc[start_rows:end_rows])
+        print(df.iloc[start_rows:end_rows]) # display the raw data
         start_rows += 5
         end_rows += 5
 
-def time_stats(df,months):
+def time_stats(df,months): # changed this function to display the month name
     """Displays statistics on the most frequent times of travel."""
 
     print('\nCalculating The Most Frequent Times of Travel...\n')
@@ -96,15 +96,15 @@ def time_stats(df,months):
 
     # TO DO: display the most common month
     common_month = df['month'].mode()[0]
-    print('Most Common Month:', months[common_month-1])
+    print('Most Common Month:', months[common_month-1]) # display the actual name of the month
     # TO DO: display the most common day of week
     common_dow = df['day_of_week'].mode()[0]
-    print('Most Common Day of Week:', common_dow)
+    print('Most Common Day of Week:', common_dow) # display the actual name of the weekday
 
     # TO DO: display the most common start hour
     df['hour'] = df['Start Time'].dt.hour
     common_hour = df['hour'].mode()[0]
-    if (common_hour % 12 > 0):
+    if (common_hour % 12 > 0): # formula to display AM vs PM time
         print('Most Common Start Hour: {} PM'.format(common_hour % 12))
     else:
         print('Most Common Start Hour: {} AM'.format(common_hour))
@@ -126,7 +126,7 @@ def station_stats(df):
     common_estation = df['End Station'].mode()[0]
     print('Most Common End Station:', common_estation)
     # TO DO: display most frequent combination of start station and end station trip
-    common_stations = (df['Start Station'] + ' to ' + df['End Station']).mode()[0]
+    common_stations = (df['Start Station'] + ' to ' + df['End Station']).mode()[0] # concatenate the columns to get the combined mode for both columns
     print('Most Frequent Station Combination Trip:', common_stations)
     
     print("\nThis took %s seconds." % (time.time() - start_time))
@@ -141,11 +141,11 @@ def trip_duration_stats(df):
 
     # TO DO: display total travel time
     total_travel = df['Trip Duration'].sum()
-    print('Total Travel Time: {} minutes'.format(total_travel/60))
+    print('Total Travel Time: {} minutes'.format(total_travel/60)) # divide by 60 to get trip time in minutes
 
     # TO DO: display mean travel time
     mean_travel = df['Trip Duration'].mean()
-    print('Mean Travel Time: {} minutes'.format(mean_travel/60))
+    print('Mean Travel Time: {} minutes'.format(mean_travel/60)) # divide by 60 to get trip time in minutes
 
     print("\nThis took %s seconds." % (time.time() - start_time))
     print('-'*40)
@@ -163,14 +163,14 @@ def user_stats(df,city):
 
     # TO DO: Display counts of gender
     if city == 'washington':
-        print('No Gender data for Washington')
+        print('No Gender data for Washington') # take into account missing data for Washington
     else:
         genders = df['Gender'].value_counts()
         print('Gender counts:\n', genders)
 
     # TO DO: Display earliest, most recent, and most common year of birth
     if city == 'washington':
-        print('No Birth Year data for Washington')
+        print('No Birth Year data for Washington') # take into account missing data for Washington
     else:
         earliest_year = df['Birth Year'].min()
         most_recent_year = df['Birth Year'].max()
@@ -187,9 +187,9 @@ def main():
 	while True:
 		city, month, day = get_filters()
 		df = load_data(city, month, day)
-		months = ['january', 'february', 'march', 'april', 'may', 'june']
-		raw_data(df)
-		time_stats(df,months)
+		months = ['january', 'february', 'march', 'april', 'may', 'june'] # list used to display the month name
+		raw_data(df) # new function to print out the raw data
+		time_stats(df,months) # changed the function to display the month name
 		station_stats(df)
 		trip_duration_stats(df)
 		user_stats(df,city)
