@@ -59,7 +59,7 @@ def load_data(city, month, day):
     
     df['Start Time'] = pd.to_datetime(df['Start Time'])
     df['month'] = df['Start Time'].dt.month
-    df['day_of_week'] = df['Start Time'].dt.day_name() # get the weekday names
+    df['day_of_week'] = df['Start Time'].dt.day # get the weekday names
     
     if month.lower() != 'all':
         # use the index of the months list to get the corresponding int
@@ -71,7 +71,9 @@ def load_data(city, month, day):
 
     if day.lower() != 'all':
         # filter by day of week to create the new dataframe
-        df = df[df['day_of_week'] == day.day_name()] # get the weekday names
+        days = ['monday','tuesday','wednesday','thursday','friday','saturday','sunday']
+        day = days.index(day) + 1
+        df = df[df['day_of_week'] == day] # get the weekday names
     
     return df
 
@@ -83,12 +85,12 @@ def raw_data(df):
     end_rows = 5
     user_input = 'yes'
     while (user_input.lower() != 'no' and end_rows < row_count):
-        user_input = str(input('Would you like to see 5 rows of raw data? Please enter yes or no:'))
+        user_input = str(input('Would you like to see 5 rows of raw data? Please enter yes or no: '))
         print(df.iloc[start_rows:end_rows]) # display the raw data
         start_rows += 5
         end_rows += 5
 
-def time_stats(df,months): # changed this function to display the month name
+def time_stats(df,months,days): # changed this function to display the month and weekday name
     """Displays statistics on the most frequent times of travel."""
 
     print('\nCalculating The Most Frequent Times of Travel...\n')
@@ -96,10 +98,11 @@ def time_stats(df,months): # changed this function to display the month name
 
     # TO DO: display the most common month
     common_month = df['month'].mode()[0]
-    print('Most Common Month:', months[common_month-1]) # display the actual name of the month
+    print('Most Common Month:', months[common_month-1].capitalize()) # display the actual name of the month
+
     # TO DO: display the most common day of week
     common_dow = df['day_of_week'].mode()[0]
-    print('Most Common Day of Week:', common_dow) # display the actual name of the weekday
+    print('Most Common Day of Week:', days[common_dow-1].capitalize()) # display the actual name of the weekday
 
     # TO DO: display the most common start hour
     df['hour'] = df['Start Time'].dt.hour
@@ -141,11 +144,11 @@ def trip_duration_stats(df):
 
     # TO DO: display total travel time
     total_travel = df['Trip Duration'].sum()
-    print('Total Travel Time: {} minutes'.format(total_travel/60)) # divide by 60 to get trip time in minutes
+    print('Total Travel Time: %.2f minutes' % (total_travel/60)) # divide by 60 to get trip time in minutes
 
     # TO DO: display mean travel time
     mean_travel = df['Trip Duration'].mean()
-    print('Mean Travel Time: {} minutes'.format(mean_travel/60)) # divide by 60 to get trip time in minutes
+    print('Mean Travel Time: %.2f minutes'% (mean_travel/60)) # divide by 60 to get trip time in minutes
 
     print("\nThis took %s seconds." % (time.time() - start_time))
     print('-'*40)
@@ -184,19 +187,20 @@ def user_stats(df,city):
 
 
 def main():
-	while True:
-		city, month, day = get_filters()
-		df = load_data(city, month, day)
-		months = ['january', 'february', 'march', 'april', 'may', 'june'] # list used to display the month name
-		raw_data(df) # new function to print out the raw data
-		time_stats(df,months) # changed the function to display the month name
-		station_stats(df)
-		trip_duration_stats(df)
-		user_stats(df,city)
+    while True:
+        city, month, day = get_filters()
+        df = load_data(city, month, day)
+        months = ['january', 'february', 'march', 'april', 'may', 'june'] # list used to display the month name
+        days = ['monday','tuesday','wednesday','thursday','friday','saturday','sunday'] # list used to display the weekday name
+        raw_data(df) # new function to print out the raw data
+        time_stats(df,months,days) # changed the function to display the month name
+        station_stats(df)
+        trip_duration_stats(df)
+        user_stats(df,city)
 
-		restart = input('\nWould you like to restart? Enter yes or no.\n')
-		if restart.lower() != 'yes':
-			break
+        restart = input('\nWould you like to restart? Enter yes or no.\n')
+        if restart.lower() != 'yes':
+            break
 
 if __name__ == "__main__":
 	main()
